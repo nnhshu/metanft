@@ -1,0 +1,1285 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>MetaNFT - The first NFT Cross-Chain marketplace</title>
+    <meta name="description" content="Buy and sell your NFTs in synergy and simultaneously on Ethereum, BSC, and Polygon.
+    Simple, powerful and fast
+    ">
+    <meta name="keywords" content="token, crypto, meta, nft, ethereum, bsc, polygon, marketplace, crosschain">
+    <meta name="author" content="Steve">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="msapplication-TileColor" content="#080032">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/img-comparison-slider@7/dist/styles.css" />
+    <link rel="stylesheet" media="screen" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/1.7.2/css/lightgallery.min.css">
+    <link rel="stylesheet" media="screen" href="./assets/css/style.css">
+    <style>
+        .page-loading {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            -webkit-transition: all .4s .2s ease-in-out;
+            transition: all .4s .2s ease-in-out;
+            background-color: #fff;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 9999;
+        }
+
+        .dark-mode .page-loading {
+            background-color: #131022;
+        }
+
+        .page-loading.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .page-loading-inner {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            -webkit-transform: translateY(-50%);
+            transform: translateY(-50%);
+            -webkit-transition: opacity .2s ease-in-out;
+            transition: opacity .2s ease-in-out;
+            opacity: 0;
+        }
+
+        .page-loading.active>.page-loading-inner {
+            opacity: 1;
+        }
+
+        .page-loading-inner>span {
+            display: block;
+            font-size: 1rem;
+            font-weight: normal;
+            color: #9397ad;
+        }
+
+        .dark-mode .page-loading-inner>span {
+            color: #fff;
+            opacity: .6;
+        }
+
+        .page-spinner {
+            display: inline-block;
+            width: 2.75rem;
+            height: 2.75rem;
+            margin-bottom: .75rem;
+            vertical-align: text-bottom;
+            border: .15em solid #b4b7c9;
+            border-right-color: transparent;
+            border-radius: 50%;
+            -webkit-animation: spinner .75s linear infinite;
+            animation: spinner .75s linear infinite;
+        }
+
+        .dark-mode .page-spinner {
+            border-color: rgba(255, 255, 255, .4);
+            border-right-color: transparent;
+        }
+
+        @-webkit-keyframes spinner {
+            100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spinner {
+            100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+
+        .tokenAddr {
+            cursor: pointer;
+        }
+
+        .copy {
+            margin-top: -30px;
+            margin-left: -85px;
+            padding: 10px;
+            border-radius: 10px;
+            color: #ffffff;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 120px;
+            background-image: linear-gradient(to right, #6366f1, #8B5CF6, #D946EF);
+            z-index: 999;
+            display: none;
+            text-align: center;
+        }
+
+        .shadow-img {
+            border-radius: 5px;
+            box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        }
+
+        div.swiper-wrapper .card-body {
+            min-height: 107px;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .mw-mobile-50 {
+                max-width: 50%
+            }
+        }
+
+        .card.listing,
+        .card-hover.listing:hover {
+            background-color: #fff !important;
+        }
+    </style>
+    <script>
+        let mode = window.localStorage.getItem('mode'),
+            root = document.getElementsByTagName('html')[0];
+        if (mode !== undefined && mode === 'dark') {
+            root.classList.add('dark-mode');
+        } else {
+            root.classList.remove('dark-mode');
+        }
+    </script>
+    <script>
+        (function () {
+            window.onload = function () {
+                const preloader = document.querySelector('.page-loading');
+                preloader.classList.remove('active');
+                setTimeout(function () {
+                    preloader.remove();
+                }, 1000);
+            };
+        })();
+    </script>
+    <style type="text/css" id="jarallax-clip-0">
+        #jarallax-container-0 {
+            clip: rect(0 1440px 856.765625px 0);
+            clip: rect(0, 1440px, 856.765625px, 0);
+            -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        }
+    </style>
+</head>
+
+<body cz-shortcut-listen="true">
+
+    <main class="page-wrapper">
+        <header class="header navbar navbar-expand-lg navbar-light position-absolute navbar-sticky">
+            <div class="container px-3">
+                <a href="index.html" class="navbar-brand pe-3">
+                    <img src="./assets/img/logo.svg" width="47" alt="MetaNFT">
+                    MetaNFT
+                </a>
+                <div id="navbarNav" class="offcanvas offcanvas-end">
+                    <div class="offcanvas-header border-bottom">
+                        <h5 class="offcanvas-title">Menu</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a href="#how-its-works" class="nav-link">How its Works</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#features" class="nav-link">Features</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#token" class="nav-link">Token</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#roadmap" class="nav-link">Roadmap</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#faq" class="nav-link">FAQ</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="https://bscscan.com/token/0xdedd744cc359810d02aa49e30caf91c33fe6af6c"
+                                    class="nav-link">BSC</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="https://www.certik.com/projects/metanft" class="nav-link">Certik</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="offcanvas-footer border-top">
+                        <a href="dashboard.html" class="btn btn-primary w-100">
+                            <i class="bx bxs-doughnut-chart fs-4 lh-1 me-1"></i>
+                            &nbsp;Dashboard
+                        </a>
+                    </div>
+                </div>
+                <div class="form-check form-switch mode-switch pe-lg-1 ms-auto me-4" data-bs-toggle="mode">
+                    <input type="checkbox" class="form-check-input" id="theme-mode">
+                    <label class="form-check-label d-none d-sm-block" for="theme-mode">Light</label>
+                    <label class="form-check-label d-none d-sm-block" for="theme-mode">Dark</label>
+                </div>
+                <button type="button" class="navbar-toggler" data-bs-toggle="offcanvas" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <a href="dashboard.html" class="btn btn-primary btn-sm fs-sm rounded d-none d-lg-inline-flex">
+                    <i class="bx bxs-doughnut-chart fs-5 lh-1 me-1"></i>
+                    &nbsp;Dashboard
+                </a>
+            </div>
+        </header>
+
+        <section class="jarallax position-relative d-flex align-items-center min-vh-100 bg-light mb-5 py-lg-5 pt-5"
+            style="background-image: none;" data-jarallax="" data-img-position="0% 100%" data-speed="0.5"
+            data-jarallax-original-styles="background-image: url(./assets/img/landing/digital-agency/hero-bg.svg);">
+            <div class="container position-relative zindex-5 py-5">
+                <div class="row justify-content-md-start justify-content-center">
+                    <div
+                        class="col-md-6 col-sm-8 order-md-1 order-2 d-flex flex-column mt-4 pt-2 text-md-start text-center">
+                        <div class="mb-md-5 pb-xl-5 mb-4">
+
+                            <div class="d-inline-flex align-items-center position-relative mb-3">
+                                <h4 class="mb-0">
+                                    Buy NFT <span class="text-gradient-primary" id="intro_crosschain">no matter the
+                                        blockchain</span><span class="typed-cursor typed-cursor--blink"
+                                        aria-hidden="true">|</span>
+                                </h4>
+                            </div>
+
+                            <h1 class="display-2 mb-md-1 mb-1 pb-1">
+                                The First NFT <span class="text-gradient-primary">Cross-Chain</span> MarketPlace
+                            </h1>
+                            <div class="d-md-flex align-items-md-start">
+                                <p class="d-lg-block d-none fs-3">
+                                    Buy and sell your NFTs in synergy and simultaneously on Ethereum, BSC, and Polygon.
+                                    <br>
+                                    Simple, powerful and fast
+                                </p>
+                            </div>
+                        </div>
+                        <div class="d-md-flex">
+                            <a href="https://t.me/metanftbsc" class="btn btn-icon btn-secondary btn-facebook mr-2">
+                                <i class="bx bxl-telegram"></i>
+                            </a>
+                            <a href="https://www.instagram.com/metanft_official/"
+                                class="btn btn-icon btn-secondary btn-instagram mx-2">
+                                <i class="bx bxl-instagram"></i>
+                            </a>
+                            <a href="https://twitter.com/METANFTBSC"
+                                class="btn btn-icon btn-secondary btn-twitter mx-2">
+                                <i class="bx bxl-twitter"></i>
+                            </a>
+                            <a href="https://www.reddit.com/user/METANFT_OFFICIAL/"
+                                class="btn btn-icon btn-secondary btn-youtube mx-2">
+                                <i class="bx bxl-reddit"></i>
+                            </a>
+                            <a href="https://discord.com/login?redirect_to=%2Fchannels%2F933328297440448582%2F933328297440448584"
+                                class="btn btn-icon btn-secondary btn-youtube mx-2">
+                                <i class="bx bxl-discord"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-sm-6 col-9 order-md-2 order-1">
+                        <img class="mx-auto" src="./assets/img/header.png">
+                    </div>
+                </div>
+            </div>
+            <div id="jarallax-container-0"
+                style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; overflow: hidden; z-index: -100;">
+                <div
+                    style="background-position: 0% 100%; background-size: cover; background-repeat: no-repeat; background-image: url(&quot;https://metanft-market.place/./assets/img/landing/digital-agency/hero-bg.svg&quot;); position: fixed; top: 0px; left: 0px; width: 1440px; height: 605.383px; overflow: hidden; pointer-events: none; transform-style: preserve-3d; backface-visibility: hidden; will-change: transform, opacity; margin-top: -125.691px; transform: translate3d(0px, 125.691px, 0px);">
+                </div>
+            </div>
+        </section>
+
+        <section class="container pt-lg-4" id="how-its-works">
+            <div class="swiper mySwiper pt-3">
+                <div class="swiper-wrapper" aria-live="polite">
+                    <div class="swiper-slide border-end-lg px-2" role="group" aria-label="1 / 3">
+                        <div class="text-center">
+                            <img src="./assets/img/landing/digital-agency/icons/idea.svg" width="48" alt="Bulb icon"
+                                class="d-block mb-4 mx-auto">
+                            <h4 class="mb-2 pb-1">Create an NFT</h4>
+                            <p class="mx-auto" style="max-width: 336px;">
+                                Download an item. Fill in the NFT, title, description and metadata information.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="swiper-slide border-end-lg px-2" role="group" aria-label="2 / 3">
+                        <div class="text-center">
+                            <img src="./assets/img/landing/digital-agency/icons/award.svg" width="48" alt="Award icon"
+                                class="d-block mb-4 mx-auto">
+                            <h4 class="mb-2 pb-1">Sell NFTs</h4>
+                            <p class="mx-auto" style="max-width: 336px;">
+                                Choose currency, auction, fixed price, best bid and percentage of royalties.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="swiper-slide px-2" role="group" aria-label="3 / 3">
+                        <div class="text-center">
+                            <img src="./assets/img/landing/digital-agency/icons/team.svg" width="48" alt="Team icon"
+                                class="d-block mb-4 mx-auto">
+                            <h4 class="mb-2 pb-1">Buying NFTs</h4>
+                            <p class="mx-auto" style="max-width: 336px;">
+                                Buying any ETH Chain NFT will be possible with BNB or BUSD.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="swiper-pagination position-relative pt-2 pt-sm-3 mt-4 swiper-pagination-clickable swiper-pagination-bullets swiper-pagination-horizontal swiper-pagination-lock">
+                    <span class="swiper-pagination-bullet swiper-pagination-bullet-active" tabindex="0" role="button"
+                        aria-label="Go to slide 1" aria-current="true"></span></div>
+                <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
+            </div>
+            <h2 class="h1 text-center">Compare MetaNFT to others</h2>
+            <p class="fs-lg text-center">
+                Move the mouse from <span class="badge bg-primary shadow-primary">right to left</span> or
+                <span class="badge bg-success shadow-success">left to right</span>
+            </p>
+        </section>
+        <section class="d-flex w-100 position-relative overflow-hidden mb-2 mb-5 mb-lg-5">
+            <div class="position-relative flex-xl-shrink-0 zindex-5 start-50 translate-middle-x mw-mobile-50">
+                <div class="mx-md-n5 mx-xl-0">
+                    <div class="mx-n4 mx-sm-n5 mx-xl-0">
+                        <div class="mx-n5 mx-xl-0">
+                            <img-comparison-slider class="mx-n5 mx-xl-0 rendered" tabindex="0">
+                                <img slot="first" src="./assets/img/landing/saas-2/1.jpg" alt="With out MetaNFT">
+                                <img slot="second" src="./assets/img/landing/saas-2/2.jpg" alt="With MetaNFT">
+                                <div slot="handle">
+                                    <svg class="text-primary shadow-primary rounded-circle" width="78" height="78"
+                                        xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 36 36">
+                                        <g>
+                                            <circle fill="currentColor" cx="18" cy="18" r="18"></circle>
+                                        </g>
+                                        <path fill="#fff"
+                                            d="M22.2,17.2h-8.3v-3.3L9.7,18l4.2,4.2v-3.3h8.3v3.3l4.2-4.2l-4.2-4.2V17.2z">
+                                        </path>
+                                    </svg>
+                                </div>
+                            </img-comparison-slider>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="position-absolute top-0 start-0 w-50 h-100"></div>
+            <div class="position-absolute top-0 end-0 w-50 h-100"></div>
+        </section>
+        <section id="features" class="container pt-lg-2 pt-xl-3 mt-n2 mt-sm-0 mb-2 mb-md-4 mb-lg-5">
+            <div class="row pb-xl-3">
+
+                <div class="col-lg-5 d-none d-lg-block">
+                    <div class="position-relative" style="max-width: 348px;">
+                        <img src="./assets/img/landing/app-showcase/features/1.png" alt="Phone">
+                        <img src="./assets/img/landing/app-showcase/features/2.png"
+                            class="position-absolute top-0 start-0" data-jarallax-element="0 -75"
+                            data-disable-parallax-down="lg" alt="Card"
+                            style="z-index: 0; transform: translate3d(889.87px, 0px, 0px);">
+                    </div>
+                </div>
+
+                <div class="col-lg-7">
+                    <h2 class="h1 text-center text-md-start mb-4">Our Features</h2>
+                    <p class="fs-lg text-muted text-center text-md-start mb-4 mb-xl-5">
+                        No matter which blockchain you prefer, or even if you don't have Ethereum, you can buy and sell
+                        any NFT from any blockchain.
+                    </p>
+                    <div class="row row-cols-1 row-cols-sm-2 pt-2 pt-sm-3 pt-xl-2">
+
+                        <div class="col pb-2 pb-xl-0 mb-4 mb-xl-5">
+                            <div class="d-flex align-items-start pe-xl-3">
+                                <div class="d-table bg-secondary rounded-3 flex-shrink-0 p-3 mb-3">
+                                    <img src="./assets/img/landing/app-showcase/features/happy.svg">
+                                </div>
+                                <div class="ps-4 ps-sm-3 ps-md-4">
+                                    <h3 class="h5 pb-1 mb-2">Easy payments</h3>
+                                    <p class="mb-0">
+                                        Automatic transaction swapping and routing to the right blockchain</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col pb-2 pb-xl-0 mb-4 mb-xl-5">
+                            <div class="d-flex align-items-start ps-xl-3">
+                                <div class="d-table bg-secondary rounded-3 flex-shrink-0 p-3 mb-3">
+                                    <img src="./assets/img/landing/app-showcase/features/cashback.svg">
+                                </div>
+                                <div class="ps-4 ps-sm-3 ps-md-4">
+                                    <h3 class="h5 pb-1 mb-2">Multi-assets format</h3>
+                                    <p class="mb-0">Images, Videos, Audio, Document with a categorization system via
+                                        flexible metadata.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col pb-2 pb-xl-0 mb-4 mb-xl-5">
+                            <div class="d-flex align-items-start pe-xl-3">
+                                <div class="d-table bg-secondary rounded-3 flex-shrink-0 p-3 mb-3">
+                                    <img src="./assets/img/landing/app-showcase/features/statistics.svg">
+                                </div>
+                                <div class="ps-4 ps-sm-3 ps-md-4">
+                                    <h3 class="h5 pb-1 mb-2">Personalized royalties</h3>
+                                    <p class="mb-0">Royalties are at the discretion of the seller who can determine the
+                                        amount directly on the platform.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col pb-2 pb-xl-0 mb-4 mb-xl-5">
+                            <div class="d-flex align-items-start ps-xl-3">
+                                <div class="d-table bg-secondary rounded-3 flex-shrink-0 p-3 mb-3">
+                                    <img src="./assets/img/landing/app-showcase/features/support.svg">
+                                </div>
+                                <div class="ps-4 ps-sm-3 ps-md-4">
+                                    <h3 class="h5 pb-1 mb-2">Selling options</h3>
+                                    <p class="mb-0">Best option to sell your NFTs: powerful auction, fixed price and
+                                        best offer system.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col pb-2 pb-xl-0 mb-4 mb-xl-5">
+                            <div class="d-flex align-items-start pe-xl-3">
+                                <div class="d-table bg-secondary rounded-3 flex-shrink-0 p-3 mb-3">
+                                    <img src="./assets/img/landing/app-showcase/features/security.svg">
+                                </div>
+                                <div class="ps-4 ps-sm-3 ps-md-4">
+                                    <h3 class="h5 pb-1 mb-2">Unique routing system</h3>
+                                    <p class="mb-0">The unique multi-channel router system allows the transaction amount
+                                        to flow even if the buyer and seller are on two different channels.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col pb-2 pb-xl-0 mb-4 mb-xl-5">
+                            <div class="d-flex align-items-start ps-xl-3">
+                                <div class="d-table bg-secondary rounded-3 flex-shrink-0 p-3 mb-3">
+                                    <img src="./assets/img/landing/app-showcase/features/payments.svg">
+                                </div>
+                                <div class="ps-4 ps-sm-3 ps-md-4">
+                                    <h3 class="h5 pb-1 mb-2">Low fees</h3>
+                                    <p class="mb-0">Our Marketplace fees are 1% on each transaction of purchase only.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="container mb-5" id="token">
+            <h2 class="h1 text-center pb-3 pb-lg-4">MetaNFT Token</h2>
+            <ul class="nav nav-tabs flex-nowrap justify-content-lg-center overflow-auto pb-2 mb-3 mb-lg-4"
+                role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button id="token-info-tab" class="nav-link text-nowrap active" data-bs-toggle="tab"
+                        data-bs-target="#token-info" type="button" role="tab" aria-selected="true">
+                        <i class="bx bx-star fs-lg opacity-60 me-2"></i>
+                        Informations
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button id="token-fees-tab" class="nav-link text-nowrap" data-bs-toggle="tab"
+                        data-bs-target="#token-fees" type="button" role="tab" aria-selected="false">
+                        <i class="bx bxs-badge-dollar fs-lg opacity-60 me-2"></i>
+                        Transaction Fees
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button id="token-rewards-tab" class="nav-link text-nowrap" data-bs-toggle="tab"
+                        data-bs-target="#token-rewards" type="button" role="tab" aria-selected="false">
+                        <i class="bx bx-rocket fs-lg opacity-60 me-2"></i>
+                        Rewards System
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button id="token-rewards-tab" class="nav-link text-nowrap" data-bs-toggle="tab"
+                        data-bs-target="#team" type="button" role="tab" aria-selected="false">
+                        <i class="bx bx-user-circle fs-lg opacity-60 me-2"></i>
+                        Team
+                    </button>
+                </li>
+            </ul>
+            <div class="tab-content bg-secondary rounded-3 py-4">
+
+                <div class="tab-pane fade show active" id="token-info" role="tabpanel"
+                    aria-labelledby="project-management-tab">
+                    <div class="row align-items-center pt-3 pt-sm-4 pt-md-0 px-3 px-sm-4 px-lg-0">
+                        <div class="col-lg-4 col-md-5 offset-lg-1 text-center text-md-start">
+                            <h3 class="mb-lg-4">Token Informations</h3>
+                            <p>
+                                The supply of MetaNFT tokens is deflationary and the MetaNFT team burns a quantity of
+                                MetaNFT
+                                obtained from purchases with the profits of the NFT market each month.
+                                <br>
+                                <br>
+                                <b>NAME:</b> MetaNFT<br>
+                                <b>SYMBOL:</b> MNFT<br>
+                                <b>DECIMALS:</b> 9<br>
+                                <b>TYPE:</b> BEP20<br>
+                                <b>TOTAL SUPPLY:</b> 100 000 000<br>
+                                <b>ADDRESS:</b><span class="tokenAddr">0xdedd744cc35....f91c33fe6af6c</span><br>
+                                <b>PCS:</b> <a
+                                    href="https://pancakeswap.finance/swap?outputCurrency=0xdedd744cc359810D02aa49E30CAf91C33fe6Af6c"
+                                    target="_blank">BUY</a><br>
+                                <b>PINKSALE:</b> <a
+                                    href="https://www.pinksale.finance/#/pinklock/record/24174?chain=BSC"
+                                    target="_blank">LIQUIDITY LOCK</a><br>
+                                <b>CERTIK:</b> <a href="https://www.certik.com/projects/metanft"
+                                    target="_blank">Audit</a>
+                                <br><br>
+                                <a target="_blank" href="whitepaper.html" class="btn btn-warning btn-sm fs-sm rounded">
+                                    <i class="bx bxs-file-pdf fs-5 lh-1 me-1"></i>
+                                    &nbsp;WhitePaper
+                                </a>
+                            </p>
+                            <button type="button" class="btn btn-sm btn-primary shadow-primary token-fees mr-2 mb-2"
+                                style="min-width: 176px;">
+                                <i class="bx bx-left-arrow-alt fs-5 lh-1 me-1"></i>
+                                Transaction Fees
+                            </button>
+                            <button type="button" class="btn btn-sm btn-success shadow-success token-rewards mb-2"
+                                style="min-width: 176px;">
+                                <i class="bx bx-right-arrow-alt fs-5 lh-1 me-1"></i>
+                                Rewards System
+                            </button>
+                        </div>
+                        <div class="col-lg-6 col-md-7 mt-md-4">
+                            <img src="./assets/img/landing/saas-1/use-cases/01.png"
+                                class="d-block my-lg-2 mx-auto me-md-0 shadow-img">
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="token-fees" role="tabpanel" aria-labelledby="remote-work-tab">
+                    <div class="row align-items-center pt-3 pb-2 pb-sm-3 pt-sm-4 pt-md-0 px-3 px-sm-4 px-lg-0">
+                        <div class="col-lg-4 col-md-5 offset-lg-1 text-center text-md-start">
+                            <h3 class="mb-lg-4">Transaction Fees</h3>
+                            <p>
+                                Fees are collected on Buy and Sell transactions.<br><br>
+                                <b>Buy Fees: 8%</b> <br>
+                                &gt; 5% will be allocated for rewards to holders<br>
+                                &gt; 3% for the developer team<br><br>
+                                <b>Sell Fees: 14%</b><br>
+                                &gt; 5% will be allocated for rewards to holders<br>
+                                &gt; 9% for the marketing team<br>
+                            </p>
+                            <p>
+                                <button type="button" class="btn btn-sm btn-success shadow-success token-info mb-2 mr-2"
+                                    style="min-width: 176px;">
+                                    <i class="bx bx-left-arrow-alt fs-5 lh-1 me-1"></i>
+                                    Token Informations
+                                </button>
+                                <button type="button" class="btn btn-sm btn-primary shadow-primary token-rewards mb-2"
+                                    style="min-width: 176px;">
+                                    <i class="bx bx-right-arrow-alt fs-5 lh-1 me-1"></i>
+                                    Rewards System
+                                </button>
+                            </p>
+                        </div>
+                        <div class="col-lg-6 col-md-7 mt-md-4">
+                            <img src="./assets/img/landing/saas-1/use-cases/02.png"
+                                class="d-block my-lg-2 mx-auto me-md-0">
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="token-rewards" role="tabpanel" aria-labelledby="product-release-tab">
+                    <div class="row align-items-center pt-3 pt-sm-4 pt-md-0 px-3 pe-sm-4 pe-md-0 ps-sm-4 ps-lg-0">
+                        <div class="col-lg-4 col-md-5 offset-lg-1 text-center text-md-start">
+                            <h3 class="mb-lg-4">Rewards System</h3>
+                            <p>
+                                Our team has developed a reward system based on loyalty through its smart
+                                contract.<br><br>
+                                The rewards are distributed to two types of HOLDERS:<br>
+                                &gt; MetaNFT's <b>1000 Biggest Holders</b><br>
+                                &gt; MetaNFT's <b>1000 Oldest Holders</b><br><br>
+                                A Dashboard is available to everyone in order to follow the status of your Wallet as
+                                well as its position.
+                                <br><br>
+                                <a href="dashboard.html" class="btn btn-warning btn-sm fs-sm rounded">
+                                    <i class="bx bxs-doughnut-chart fs-5 lh-1 me-1"></i>
+                                    &nbsp;Launch Dashboard
+                                </a>
+                            </p>
+                            <p>
+                                <button type="button" class="btn btn-sm btn-primary shadow-primary token-fees mr-2 mb-2"
+                                    style="min-width: 176px;">
+                                    <i class="bx bx-left-arrow-alt fs-5 lh-1 me-1"></i>
+                                    Transaction Fees
+                                </button>
+                                <button type="button" class="btn btn-sm btn-success shadow-info token-info mb-2"
+                                    style="min-width: 176px;">
+                                    <i class="bx bx-right-arrow-alt fs-5 lh-1 me-1"></i>
+                                    Token Informations
+                                </button>
+                            </p>
+                        </div>
+                        <div class="col-lg-6 col-md-7 mt-n3 mt-md-1">
+                            <img src="./assets/img/landing/saas-1/use-cases/03.png"
+                                class="d-block mb-lg-2 mx-auto me-md-0" width="525" alt="Image">
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="team" role="tabpanel" aria-labelledby="product-release-tab">
+                    <div class="row align-items-center pt-3 pt-sm-4 pt-md-0 px-3 pe-sm-4 pe-md-0 ps-sm-4 ps-lg-0">
+                        <div class="col-lg-6 text-center text-md-start">
+                            <div class="card card-body card-hover bg-light border-0 text-center" style="margin: 20px;">
+                                <img src="./assets/img/team/steve.png" class="d-block rounded-circle mx-auto mb-3"
+                                    width="162" alt="Cameron Williamson">
+                                <h5 class="fw-medium fs-lg mb-1">Steve</h5>
+                                <p class="fs-sm mb-3">Chief Executive Officer &amp; Developer</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mt-n3 mt-md-1">
+                            <div class="card card-body card-hover bg-light border-0 text-center" style="margin: 20px;">
+                                <img src="./assets/img/team/kevin.png" class="d-block rounded-circle mx-auto mb-3"
+                                    width="162" alt="Cameron Williamson">
+                                <h5 class="fw-medium fs-lg mb-1">Kevin</h5>
+                                <p class="fs-sm mb-3">Chief marketing officer</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="container pb-4 pb-lg-5 mb-3" id="listing">
+            <div class="d-flex align-items-center justify-content-md-between justify-content-center mb-md-4 mb-3">
+                <h2 class="mb-0 text-center">Platform listing</h2>
+
+                <div class="d-md-flex d-none ms-4">
+                    <button type="button" id="prev-brand" class="btn btn-prev btn-icon btn-sm me-2" tabindex="0"
+                        aria-label="Previous slide" aria-controls="swiper-wrapper-e93a46ba85221026d">
+                        <i class="bx bx-chevron-left"></i>
+                    </button>
+                    <button type="button" id="next-brand" class="btn btn-next btn-icon btn-sm ms-2" tabindex="0"
+                        aria-label="Next slide" aria-controls="swiper-wrapper-e93a46ba85221026d">
+                        <i class="bx bx-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="swiper mx-n2 swiper-initialized swiper-horizontal swiper-pointer-events" data-swiper-options="{
+              &quot;slidesPerView&quot;: 2,
+              &quot;navigation&quot;: {
+                &quot;prevEl&quot;: &quot;#prev-brand&quot;,
+                &quot;nextEl&quot;: &quot;#next-brand&quot;
+              },
+              &quot;loop&quot;: true,
+              &quot;pagination&quot;: {
+                &quot;el&quot;: &quot;.swiper-pagination&quot;,
+                &quot;clickable&quot;: true
+              },
+              &quot;breakpoints&quot;: {
+                &quot;500&quot;: {
+                  &quot;slidesPerView&quot;: 3,
+                  &quot;spaceBetween&quot;: 8
+                },
+                &quot;650&quot;: {
+                  &quot;slidesPerView&quot;: 4,
+                  &quot;spaceBetween&quot;: 8
+                },
+                &quot;900&quot;: {
+                  &quot;slidesPerView&quot;: 5,
+                  &quot;spaceBetween&quot;: 8
+                },
+                &quot;1100&quot;: {
+                  &quot;slidesPerView&quot;: 6,
+                  &quot;spaceBetween&quot;: 8
+                }
+              }
+            }">
+                <div class="swiper-wrapper" id="swiper-wrapper-e93a46ba85221026d" aria-live="polite"
+                    style="transition-duration: 0ms; transform: translate3d(-1320px, 0px, 0px);">
+                    <div class="swiper-slide py-3 swiper-slide-duplicate" data-swiper-slide-index="2" role="group"
+                        aria-label="3 / 8" style="width: 212px; margin-right: 8px;">
+                        <a href="https://pancakeswap.finance/swap?outputCurrency=0xdedd744cc359810D02aa49E30CAf91C33fe6Af6c"
+                            class="card card-body card-hover px-2 mx-2 listing">
+                            <img src="./assets/img/brands/pancakeswap.png" class="d-block mx-auto my-2" width="154"
+                                alt="PanCakeSwap">
+                        </a>
+                    </div>
+                    <div class="swiper-slide py-3 swiper-slide-duplicate" data-swiper-slide-index="3" role="group"
+                        aria-label="4 / 8" style="width: 212px; margin-right: 8px;">
+                        <a href="https://www.coingecko.com/en/coins/metanft"
+                            class="card card-body card-hover px-2 mx-2 listing">
+                            <img src="./assets/img/brands/cg.png" class="d-block mx-auto my-2" width="154"
+                                alt="Coingeko">
+                        </a>
+                    </div>
+                    <div class="swiper-slide py-3 swiper-slide-duplicate" data-swiper-slide-index="4" role="group"
+                        aria-label="5 / 8" style="width: 212px; margin-right: 8px;">
+                        <a href="https://coinmarketcap.com/currencies/metanft/"
+                            class="card card-body card-hover px-2 mx-2 listing">
+                            <img src="./assets/img/brands/cmc.png" class="d-block mx-auto my-2" width="154"
+                                alt="CoinMarktCap">
+                        </a>
+                    </div>
+                    <div class="swiper-slide py-3 swiper-slide-duplicate" data-swiper-slide-index="5" role="group"
+                        aria-label="6 / 8" style="width: 212px; margin-right: 8px;">
+                        <a href="https://www.binance.com/en/price/metanft"
+                            class="card card-body card-hover px-2 mx-2 listing">
+                            <img src="./assets/img/brands/binance.png" class="d-block mx-auto my-2" width="154"
+                                alt="Binance">
+                        </a>
+                    </div>
+                    <div class="swiper-slide py-3 swiper-slide-duplicate" data-swiper-slide-index="6" role="group"
+                        aria-label="7 / 8" style="width: 212px; margin-right: 8px;">
+                        <a href="https://crypto.com/price/metanft" class="card card-body card-hover px-2 mx-2 listing">
+                            <img src="./assets/img/brands/crypto.jpg" class="d-block mx-auto my-2" width="154"
+                                alt="crypto.com">
+                        </a>
+                    </div>
+                    <div class="swiper-slide py-3 swiper-slide-duplicate swiper-slide-prev" data-swiper-slide-index="7"
+                        role="group" aria-label="8 / 8" style="width: 212px; margin-right: 8px;">
+                        <a href="https://www.coinbase.com/price/metanft"
+                            class="card card-body card-hover px-2 mx-2 listing">
+                            <img src="./assets/img/brands/coinbase.jpg" class="d-block mx-auto my-1" width="154"
+                                alt="Coinbase">
+                        </a>
+                    </div>
+                    <div class="swiper-slide py-3 swiper-slide-active" data-swiper-slide-index="0" role="group"
+                        aria-label="1 / 8" style="width: 212px; margin-right: 8px;">
+                        <a href="https://bscscan.com/token/0xdedd744cc359810d02aa49e30caf91c33fe6af6c" target="_blank"
+                            class="card card-body card-hover px-2 mx-2 listing">
+                            <img src="./assets/img/brands/bsc.png" class="d-block mx-auto my-2" width="154"
+                                alt="Binance Smart Chain">
+                        </a>
+                    </div>
+                    <div class="swiper-slide py-3 swiper-slide-next" data-swiper-slide-index="1" role="group"
+                        aria-label="2 / 8" style="width: 212px; margin-right: 8px;">
+                        <a href="https://www.certik.com/projects/metanft" target="_blank"
+                            class="card card-body card-hover px-2 mx-2 listing">
+                            <img src="./assets/img/brands/certik.png" class="d-block mx-auto my-2" width="154"
+                                alt="Certik Audit">
+                        </a>
+                    </div>
+                    <div class="swiper-slide py-3" data-swiper-slide-index="2" role="group" aria-label="3 / 8"
+                        style="width: 212px; margin-right: 8px;">
+                        <a href="https://pancakeswap.finance/swap?outputCurrency=0xdedd744cc359810D02aa49E30CAf91C33fe6Af6c"
+                            class="card card-body card-hover px-2 mx-2 listing">
+                            <img src="./assets/img/brands/pancakeswap.png" class="d-block mx-auto my-2" width="154"
+                                alt="PanCakeSwap">
+                        </a>
+                    </div>
+                    <div class="swiper-slide py-3" data-swiper-slide-index="3" role="group" aria-label="4 / 8"
+                        style="width: 212px; margin-right: 8px;">
+                        <a href="https://www.coingecko.com/en/coins/metanft"
+                            class="card card-body card-hover px-2 mx-2 listing">
+                            <img src="./assets/img/brands/cg.png" class="d-block mx-auto my-2" width="154"
+                                alt="Coingeko">
+                        </a>
+                    </div>
+                    <div class="swiper-slide py-3" data-swiper-slide-index="4" role="group" aria-label="5 / 8"
+                        style="width: 212px; margin-right: 8px;">
+                        <a href="https://coinmarketcap.com/currencies/metanft/"
+                            class="card card-body card-hover px-2 mx-2 listing">
+                            <img src="./assets/img/brands/cmc.png" class="d-block mx-auto my-2" width="154"
+                                alt="CoinMarktCap">
+                        </a>
+                    </div>
+                    <div class="swiper-slide py-3" data-swiper-slide-index="5" role="group" aria-label="6 / 8"
+                        style="width: 212px; margin-right: 8px;">
+                        <a href="https://www.binance.com/en/price/metanft"
+                            class="card card-body card-hover px-2 mx-2 listing">
+                            <img src="./assets/img/brands/binance.png" class="d-block mx-auto my-2" width="154"
+                                alt="Binance">
+                        </a>
+                    </div>
+                    <div class="swiper-slide py-3" data-swiper-slide-index="6" role="group" aria-label="7 / 8"
+                        style="width: 212px; margin-right: 8px;">
+                        <a href="https://crypto.com/price/metanft" class="card card-body card-hover px-2 mx-2 listing">
+                            <img src="./assets/img/brands/crypto.jpg" class="d-block mx-auto my-2" width="154"
+                                alt="crypto.com">
+                        </a>
+                    </div>
+                    <div class="swiper-slide py-3 swiper-slide-duplicate-prev" data-swiper-slide-index="7" role="group"
+                        aria-label="8 / 8" style="width: 212px; margin-right: 8px;">
+                        <a href="https://www.coinbase.com/price/metanft"
+                            class="card card-body card-hover px-2 mx-2 listing">
+                            <img src="./assets/img/brands/coinbase.jpg" class="d-block mx-auto my-1" width="154"
+                                alt="Coinbase">
+                        </a>
+                    </div>
+                    <div class="swiper-slide py-3 swiper-slide-duplicate swiper-slide-duplicate-active"
+                        data-swiper-slide-index="0" role="group" aria-label="1 / 8"
+                        style="width: 212px; margin-right: 8px;">
+                        <a href="https://bscscan.com/token/0xdedd744cc359810d02aa49e30caf91c33fe6af6c" target="_blank"
+                            class="card card-body card-hover px-2 mx-2 listing">
+                            <img src="./assets/img/brands/bsc.png" class="d-block mx-auto my-2" width="154"
+                                alt="Binance Smart Chain">
+                        </a>
+                    </div>
+                    <div class="swiper-slide py-3 swiper-slide-duplicate swiper-slide-duplicate-next"
+                        data-swiper-slide-index="1" role="group" aria-label="2 / 8"
+                        style="width: 212px; margin-right: 8px;">
+                        <a href="https://www.certik.com/projects/metanft" target="_blank"
+                            class="card card-body card-hover px-2 mx-2 listing">
+                            <img src="./assets/img/brands/certik.png" class="d-block mx-auto my-2" width="154"
+                                alt="Certik Audit">
+                        </a>
+                    </div>
+                    <div class="swiper-slide py-3 swiper-slide-duplicate" data-swiper-slide-index="2" role="group"
+                        aria-label="3 / 8" style="width: 212px; margin-right: 8px;">
+                        <a href="https://pancakeswap.finance/swap?outputCurrency=0xdedd744cc359810D02aa49E30CAf91C33fe6Af6c"
+                            class="card card-body card-hover px-2 mx-2 listing">
+                            <img src="./assets/img/brands/pancakeswap.png" class="d-block mx-auto my-2" width="154"
+                                alt="PanCakeSwap">
+                        </a>
+                    </div>
+                    <div class="swiper-slide py-3 swiper-slide-duplicate" data-swiper-slide-index="3" role="group"
+                        aria-label="4 / 8" style="width: 212px; margin-right: 8px;">
+                        <a href="https://www.coingecko.com/en/coins/metanft"
+                            class="card card-body card-hover px-2 mx-2 listing">
+                            <img src="./assets/img/brands/cg.png" class="d-block mx-auto my-2" width="154"
+                                alt="Coingeko">
+                        </a>
+                    </div>
+                    <div class="swiper-slide py-3 swiper-slide-duplicate" data-swiper-slide-index="4" role="group"
+                        aria-label="5 / 8" style="width: 212px; margin-right: 8px;">
+                        <a href="https://coinmarketcap.com/currencies/metanft/"
+                            class="card card-body card-hover px-2 mx-2 listing">
+                            <img src="./assets/img/brands/cmc.png" class="d-block mx-auto my-2" width="154"
+                                alt="CoinMarktCap">
+                        </a>
+                    </div>
+                    <div class="swiper-slide py-3 swiper-slide-duplicate" data-swiper-slide-index="5" role="group"
+                        aria-label="6 / 8" style="width: 212px; margin-right: 8px;">
+                        <a href="https://www.binance.com/en/price/metanft"
+                            class="card card-body card-hover px-2 mx-2 listing">
+                            <img src="./assets/img/brands/binance.png" class="d-block mx-auto my-2" width="154"
+                                alt="Binance">
+                        </a>
+                    </div>
+                </div>
+                <div
+                    class="swiper-pagination position-relative pt-3 mt-4 d-md-none d-flex swiper-pagination-clickable swiper-pagination-bullets swiper-pagination-horizontal">
+                    <span class="swiper-pagination-bullet swiper-pagination-bullet-active" tabindex="0" role="button"
+                        aria-label="Go to slide 1" aria-current="true"></span><span class="swiper-pagination-bullet"
+                        tabindex="0" role="button" aria-label="Go to slide 2"></span><span
+                        class="swiper-pagination-bullet" tabindex="0" role="button"
+                        aria-label="Go to slide 3"></span><span class="swiper-pagination-bullet" tabindex="0"
+                        role="button" aria-label="Go to slide 4"></span><span class="swiper-pagination-bullet"
+                        tabindex="0" role="button" aria-label="Go to slide 5"></span><span
+                        class="swiper-pagination-bullet" tabindex="0" role="button"
+                        aria-label="Go to slide 6"></span><span class="swiper-pagination-bullet" tabindex="0"
+                        role="button" aria-label="Go to slide 7"></span><span class="swiper-pagination-bullet"
+                        tabindex="0" role="button" aria-label="Go to slide 8"></span></div>
+                <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
+            </div>
+        </section>
+        <section class="position-relative mb-5" id="roadmap">
+            <div class="container position-relative zindex-5 pb-md-4 pt-md-2 pt-lg-3 pb-lg-5">
+                <div class="row justify-content-center text-center pb-3 mb-sm-2 mb-lg-3">
+                    <div class="col-xl-6 col-lg-7 col-md-9">
+                        <h2 class="h1 mb-lg-4">Roadmap</h2>
+                    </div>
+                </div>
+                <img src="./assets/img/roadmap.png?v12" class="d-block mx-auto my-2" alt="roadmap metanft marketplace">
+            </div>
+            <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(255,255,255,.05);">
+            </div>
+        </section>
+        <section class="container mt-n1 mt-sm-0 pb-5" id="faq">
+            <div class="row pb-2 pb-md-4 pb-lg-5">
+                <div class="col-xl-4 col-md-5 text-center text-md-start pb-2 pb-md-0 mb-4 mb-md-0 mt-md-5 pt-md-5"
+                    data-jarallax-element="60" data-disable-parallax-down="md"
+                    style="position: relative; z-index: 0; transform: translate3d(0px, -1583.76px, 0px);">
+                    <h2 class="pb-3 mb-1 mb-lg-3">Do you have any questions? <br class="d-none d-md-inline">Check out
+                        the FAQs</h2>
+                    <p class="fs-lg pb-3 mb-2 mb-lg-3">Do you still have unanswered questions and need to contact us?
+                    </p>
+                    <div class="d-md-flex">
+                        <a href="https://t.me/metanftbsc" class="btn btn-icon btn-secondary btn-facebook mr-2">
+                            <i class="bx bxl-telegram"></i>
+                        </a>
+                        <a href="https://www.instagram.com/metanft_official/"
+                            class="btn btn-icon btn-secondary btn-instagram mx-2">
+                            <i class="bx bxl-instagram"></i>
+                        </a>
+                        <a href="https://twitter.com/METANFTBSC" class="btn btn-icon btn-secondary btn-twitter mx-2">
+                            <i class="bx bxl-twitter"></i>
+                        </a>
+                        <a href="https://www.reddit.com/user/METANFT_OFFICIAL/"
+                            class="btn btn-icon btn-secondary btn-youtube mx-2">
+                            <i class="bx bxl-reddit"></i>
+                        </a>
+                        <a href="https://discord.com/login?redirect_to=%2Fchannels%2F933328297440448582%2F933328297440448584"
+                            class="btn btn-icon btn-secondary btn-youtube mx-2">
+                            <i class="bx bxl-discord"></i>
+                        </a>
+                        <a href="https://github.com/MetaNFTSteve" class="btn btn-icon btn-secondary btn-facebook mx-2">
+                            <i class="bx bxl-github"></i>
+                        </a>
+                    </div>
+                    <div id="jarallax-container-2"
+                        style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; overflow: hidden; z-index: -100;">
+                        <div
+                            style="pointer-events: none; transform-style: preserve-3d; backface-visibility: hidden; will-change: transform, opacity; position: fixed;">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-7 offset-xl-1">
+                    <div class="accordion" id="faq">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="q1-heading">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#q1" aria-expanded="true" aria-controls="q1">
+                                    What kind of NFT can I buy or sell on your platform?
+                                </button>
+                            </h2>
+                            <div id="q1" class="accordion-collapse collapse show" aria-labelledby="q1-heading"
+                                data-bs-parent="#faq">
+                                <div class="accordion-body fs-sm">
+                                    <p>
+                                        You can buy or sell any NFT on our platform and exchange it via our marketplace,
+                                        regardless of whether it is an artwork or a video.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="q2-heading">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#q2" aria-expanded="false" aria-controls="q2">
+                                    What is Cross-Chain NFT MarketPlace?
+                                </button>
+                            </h2>
+                            <div id="q2" class="accordion-collapse collapse" aria-labelledby="q2-heading"
+                                data-bs-parent="#faq">
+                                <div class="accordion-body fs-sm">
+                                    <p>You can buy and sell no matter which blockchain you use,
+                                        and no matter the blockchain on which the NFT is stored. As a seller, you have
+                                        the advantage of offering your NFTs on any blockchain
+                                        at the same time, and as a buyer, you don't have to worry about having money in
+                                        the NFT's blockchain.
+                                        The entire process is automated for you.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="q3-heading">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#q3" aria-expanded="false" aria-controls="q3">
+                                    What does your Marketplace intend to achieve in the long term?
+                                </button>
+                            </h2>
+                            <div id="q3" class="accordion-collapse collapse" aria-labelledby="q3-heading"
+                                data-bs-parent="#faq">
+                                <div class="accordion-body fs-sm">
+                                    <p>The purpose of our marketplace is to connect all blockchains together,
+                                        so that users can buy, sell and validate their transactions with ease.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="q4-heading">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#q4" aria-expanded="false" aria-controls="q4">
+                                    How does this relate to the metaverse?
+                                </button>
+                            </h2>
+                            <div id="q4" class="accordion-collapse collapse" aria-labelledby="q4-heading"
+                                data-bs-parent="#faq">
+                                <div class="accordion-body fs-sm">
+                                    <p>We are great art lovers who delight in contemplating works of art of all kinds
+                                        and styles,
+                                        but only their owners can enjoy them as they are often not accessible.
+                                        Our ultimate goal is to develop a gigantic virtual museum so that
+                                        everyone can enjoy the works of art with ease.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="bg-secondary py-5">
+            <div class="container text-center py-1 py-md-4 py-lg-5">
+                <h2 class="h1 mb-4">Follow us on the networks !</h2>
+                <p class="lead pb-3 mb-3">And do not miss any information</p>
+                <div class="d-flex justify-content-center ">
+                    <a href="https://t.me/metanftbsc" class="btn btn-icon btn-secondary btn-facebook mr-2">
+                        <i class="bx bxl-telegram"></i>
+                    </a>
+                    <a href="https://www.instagram.com/metanft_official/"
+                        class="btn btn-icon btn-secondary btn-instagram mx-2">
+                        <i class="bx bxl-instagram"></i>
+                    </a>
+                    <a href="https://twitter.com/METANFTBSC" class="btn btn-icon btn-secondary btn-twitter mx-2">
+                        <i class="bx bxl-twitter"></i>
+                    </a>
+                    <a href="https://www.reddit.com/user/METANFT_OFFICIAL/"
+                        class="btn btn-icon btn-secondary btn-youtube mx-2">
+                        <i class="bx bxl-reddit"></i>
+                    </a>
+                    <a href="https://discord.com/login?redirect_to=%2Fchannels%2F933328297440448582%2F933328297440448584"
+                        class="btn btn-icon btn-secondary btn-youtube mx-2">
+                        <i class="bx bxl-discord"></i>
+                    </a>
+                    <a href="https://github.com/MetaNFTSteve" class="btn btn-icon btn-secondary btn-facebook mx-2">
+                        <i class="bx bxl-github"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="footer pt-5 pb-4 pb-lg-5 mt-2 mt-md-0">
+        <div class="container pt-lg-4">
+            <div class="row pb-5">
+                <div class="col-lg-4 col-md-6">
+                    <div class="navbar-brand text-dark p-0 me-0 mb-3 mb-lg-4">
+                        <img src="./assets/img/logo.svg" width="47" alt="Silicon">
+                        MetaNFT
+                    </div>
+                    <p class="fs-sm pb-lg-3 mb-4">
+                        The first NFT Cross-Chain marketplace | Buy and sell your NFTs in synergy and simultaneously on
+                        Ethereum, BSC, and Polygon.
+                        Simple, powerful and fast
+                    </p>
+                </div>
+                <div class="col-xl-6 col-lg-7 col-md-5 offset-xl-1 offset-md-1 pt-4 pt-md-1 pt-lg-0">
+                    <div id="footer-links" class="row">
+                        <div class="col-lg-4">
+                            <h6 class="mb-2">
+                                <a href="#useful-links" class="d-block text-dark dropdown-toggle d-lg-none py-2"
+                                    data-bs-toggle="collapse">Useful Links</a>
+                            </h6>
+                            <div id="useful-links" class="collapse d-lg-block" data-bs-parent="#footer-links">
+                                <ul class="nav flex-column pb-lg-1 mb-lg-3">
+                                    <li class="nav-item"><a href="#how-its-works"
+                                            class="nav-link d-inline-block px-0 pt-1 pb-2">How its Works</a></li>
+                                    <li class="nav-item"><a href="#features"
+                                            class="nav-link d-inline-block px-0 pt-1 pb-2">Features</a></li>
+                                    <li class="nav-item"><a href="#token"
+                                            class="nav-link d-inline-block px-0 pt-1 pb-2">Token</a></li>
+                                    <li class="nav-item"><a href="#roadmap"
+                                            class="nav-link d-inline-block px-0 pt-1 pb-2">Roadmap</a></li>
+                                    <li class="nav-item"><a href="#faq"
+                                            class="nav-link d-inline-block px-0 pt-1 pb-2">FAQ</a></li>
+                                    <li class="nav-item"><a
+                                            href="https://bscscan.com/token/0xdedd744cc359810d02aa49e30caf91c33fe6af6c"
+                                            target="_blank" class="nav-link d-inline-block px-0 pt-1 pb-2">BSC</a></li>
+                                    <li class="nav-item"><a href="https://www.certik.com/projects/metanft"
+                                            target="_blank" class="nav-link d-inline-block px-0 pt-1 pb-2">Certik</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-3">
+                            <h6 class="mb-2">
+                                <a href="#social-links" class="d-block text-dark dropdown-toggle d-lg-none py-2"
+                                    data-bs-toggle="collapse">Socials</a>
+                            </h6>
+                            <div id="social-links" class="collapse d-lg-block" data-bs-parent="#footer-links">
+                                <ul class="nav flex-column mb-2 mb-lg-0">
+                                    <li class="nav-item"><a href="https://twitter.com/METANFTBSC"
+                                            class="nav-link d-inline-block px-0 pt-1 pb-2">Twitter</a></li>
+                                    <li class="nav-item"><a href="https://t.me/metanftbsc"
+                                            class="nav-link d-inline-block px-0 pt-1 pb-2">Telegram</a></li>
+                                    <li class="nav-item"><a href="https://www.reddit.com/user/METANFT_OFFICIAL/"
+                                            class="nav-link d-inline-block px-0 pt-1 pb-2">Reddit</a></li>
+                                    <li class="nav-item"><a href="https://www.instagram.com/metanft_official/"
+                                            class="nav-link d-inline-block px-0 pt-1 pb-2">Instagram</a></li>
+                                    <li class="nav-item"><a
+                                            href="https://discord.com/login?redirect_to=%2Fchannels%2F933328297440448582%2F933328297440448584"
+                                            class="nav-link d-inline-block px-0 pt-1 pb-2">Discord</a></li>
+                                    <li class="nav-item"><a href="https://github.com/MetaNFTSteve"
+                                            class="nav-link d-inline-block px-0 pt-1 pb-2">GitHub</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="fs-xs text-center text-md-start pb-2 pb-lg-0 mb-0">
+                © All rights reserved. MetaNFT LTD.
+            </p>
+        </div>
+    </footer>
+    <div class="position-fixed bottom-0 start-0 p-3" style="z-index: 11">
+        <div id="rewardsToast" class="toast fade hide" role="alert" aria-live="assertive" aria-atomic="true"
+            data-bs-autohide="false" style="background-color: transparent;border: 0;">
+            <div class="toast-body" style="padding: 0;background-color: transparent;">
+                <button class="btn-close btn-close-white ms-2 mb-1" type="button" data-bs-dismiss="toast"
+                    aria-label="Close" style="
+                        position: absolute;
+                        z-index: 99;
+                        right: 25px;
+                        top: 23px;
+                    "></button>
+                <div class="position-relative">
+                    <div class="position-relative overflow-hidden bg-gradient-primary rounded-3 zindex-5 py-4 px-4">
+                        <span
+                            class="position-absolute top-50 start-0 translate-middle bg-light rounded-circle p-4"></span>
+                        <span
+                            class="position-absolute top-0 start-0 w-100 h-100 bg-repeat-0 bg-position-center-end bg-size-cover"
+                            style="background-image: url(./assets/img/landing/conference/price-card-pattern.png);"></span>
+                        <div class="px-md-3 position-relative zindex-5">
+                            <div class="d-sm-flex align-items-start justify-content-between">
+                                <div class="text-center text-sm-start me-sm-4">
+                                    <div class="lead fw-semibold text-light text-uppercase mb-2">Next Rewards</div>
+                                    <h3 class="h1 text-light" id="rewardsAmount">$2,234.98</h3>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-column flex-sm-row align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <span class="fs-lg text-light me-2">end in</span>
+                                    <span class="h4 text-light mb-0">
+                                        <div id="getting-started">00:00:00</div>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <span
+                            class="position-absolute top-50 end-0 translate-middle-y bg-light rounded-circle p-4 me-n4"></span>
+                    </div>
+                    <span class="position-absolute bg-gradient-primary opacity-60 bottom-0 mb-n2 d-dark-mode-none"
+                        style="left: 1.5rem; width: calc(100% - 3rem); height: 5rem; filter: blur(.625rem);"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="#top" class="btn-scroll-top" data-scroll="">
+        <span class="btn-scroll-top-tooltip text-muted fs-sm me-2">Top</span>
+        <i class="btn-scroll-top-icon bx bx-chevron-up"></i>
+    </a>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+    <script src="./assets/js/theme.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/smooth-scroll@16.1.3/dist/smooth-scroll.polyfills.min.js"></script>
+    <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jarallax/2.0.2/jarallax.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.0.6/swiper-bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.5.0-beta.1/lightgallery.es5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lg-video/1.4.0/lg-video.min.js"></script>
+    <script src="https://unpkg.com/imagesloaded@5/imagesloaded.pkgd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Shuffle/6.0.0/shuffle.min.js"></script>
+    <script defer src="https://unpkg.com/img-comparison-slider@7/dist/index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jarallax/1.12.1/jarallax-element.min.js.map"></script>
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/countup.js/2.0.0/countUp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" type="application/javascript">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"
+        type="application/javascript"></script>
+    <script src="https://unpkg.com/boxicons@2.1.1/dist/boxicons.js"></script>
+
+    <script>
+        $(function () {
+            var typed = new Typed("#intro_crosschain", {
+                strings: ["on Ethereum with BNB", "on BSC with ETH", "on BSC with MATIC",
+                    "on Ethereum with MATIC", "on Polygon with BNB", "no matter the blockchain"
+                ],
+                typeSpeed: 30
+            });
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.8.1/lottie.min.js"
+        integrity="sha512-V1YyTKZJrzJNhcKthpNAaohFXBnu5K9j7Qiz6gv1knFuf13TW/3vpgVVhJu9fvbdW8lb5J6czIhD4fWK2iHKXA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        $(function () {
+            $(".tokenAddr").click(function (event) {
+                event.preventDefault();
+                copy();
+            });
+
+            $(".token-fees").click(function (event) {
+                $("#token-fees-tab").trigger("click");
+            });
+            $(".token-info").click(function (event) {
+                $("#token-info-tab").trigger("click");
+            });
+            $(".token-rewards").click(function (event) {
+                $("#token-rewards-tab").trigger("click");
+            });
+
+            const copy = function () {
+                var $tp = $("<input>");
+                $("body").append($tp);
+                $tp.val("0xdedd744cc359810d02aa49e30caf91c33fe6af6c").select();
+                document.execCommand("copy");
+                $tp.remove();
+
+                var node = $("div.copy");
+                node = $("<div/>", {
+                    text: "Copied !",
+                    "class": "copy"
+                });
+                $("body").append(node);
+
+                node.fadeIn("slow", function () {
+                    setTimeout(function () {
+                        node.fadeOut("slow", function () {
+                            node.remove();
+                        });
+                    }, 1500);
+                });
+            }
+        });
+    </script>
+
+    <script>
+        var swiper = new Swiper(".mySwiper", {
+            slidesPerView: 1,
+              pagination: {
+                el: '.swiper-pagination',
+                clickable: true
+              },
+              breakpoints: {
+                500: {
+                  slidesPerView: 2
+                },
+                991: {
+                  slidesPerView: 3
+                }
+              }
+        });
+    </script>
+
+    <style type="text/css" data-typed-js-css="true">
+        .typed-cursor {
+            opacity: 1;
+        }
+
+        .typed-cursor.typed-cursor--blink {
+            animation: typedjsBlink 0.7s infinite;
+            -webkit-animation: typedjsBlink 0.7s infinite;
+            animation: typedjsBlink 0.7s infinite;
+        }
+
+        @keyframes typedjsBlink {
+            50% {
+                opacity: 0.0;
+            }
+        }
+
+        @-webkit-keyframes typedjsBlink {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
+</body>
+
+</html>
